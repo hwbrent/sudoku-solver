@@ -17,14 +17,54 @@ class Board:
 
         if board is None:
             self.spaces = [[0 for _ in range(9)] for _ in range(9)]
+            self.clues = []
             self.__set_clues()
-            pp.pprint(self.spaces)
         else:
             self.spaces = board
+            self.clues = []
+            for i, row in enumerate(self.spaces):
+                for j, entry in enumerate(row):
+                    if entry != 0:
+                        self.clues.append((i,j))
 
 
     def __getitem__(self, key) -> 'list':
         return self.spaces[key]
+
+    
+    def __setitem(self,key,value) -> None:
+        self.spaces[key] = value
+
+
+    def __len__(self):
+        return len(self.spaces)
+
+
+    def __str__(self) -> 'str':
+        ''' Formats the board into 9 grids. '''
+
+        strings = ["\n"] # \n to give the top of the board a bit of breathing room
+
+        for row_index, row in enumerate(self.spaces):
+            row_string = ""
+
+            row_string += " ".join([str(x) for x in row[:3]])
+            row_string += " | "
+            row_string += " ".join([str(x) for x in row[3:6]])
+            row_string += " | "
+            row_string += " ".join([str(x) for x in row[6:]])
+
+            strings.append(row_string)
+            
+            if row_index in [2,5]:
+                divider = "-" * len(row_string)
+                strings.append(divider)
+            # else:
+            #     # strings.append("\n\n")
+        
+        # del strings[-1]
+
+        return "\n".join(strings)
 
     # ---------------
 
@@ -69,6 +109,30 @@ class Board:
         
         return grid_values
 
+    
+    def get_prev_space(self,i:'int',j:'int') -> 'tuple[int,int]':
+        '''
+        Gets the closest space behind `self.spaces[i][j]` not in `self.clues`.
+        
+        This is used in `Backtracking.backtrack`.
+        '''
+
+        for prev_i in reversed(range(i+1)): # because we don't want to see any rows further forward than (i,j)
+
+            for prev_j in reversed(range(9)): # because we still need to see every value in each of the previous rows
+
+                space_value = self.board[i][j]
+
+                # skip past every further-on coordinate on the same row as (i,j)
+                if prev_i == i and prev_j >= j:
+                    continue
+
+                if (prev_i, prev_j) in self.board.clues:
+                    continue
+
+                # print(prev_i, prev_j)
+                return (prev_i, prev_j)
+
     # ---------------
 
     def is_empty(self, row_index:'int', column_index:'int') -> 'bool':
@@ -93,6 +157,26 @@ class Board:
         cond4 = (not value in grid)
 
         return cond1 and cond2 and cond3 and cond4
+    
+
+    def get_options(self, i, j):
+        return [x for x in range(1,10) if self.is_legal_in_space(x,i,j)]
+
+
+    def is_complete(self) -> 'bool':
+        '''
+        Checks that every space in `self.spaces` has a value which isn't `0` and that the value assignment is valid.
+        
+        (Should only be called after `self.spaces` is thought to have been completed)
+        '''
+
+        for row_index, row in enumerate(self.spaces):
+            for column_index, value in enumerate(row):
+                
+                if (value == 0) or (not self.is_legal_in_space(value, row_index, column_index)):
+                    return False
+        else:
+            return True
 
     # ---------------
 
@@ -105,15 +189,9 @@ class Board:
 
             i = random.randint(0,8)
             j = random.randint(0,8)
-            val = random.randint(1,9)
+            val = random.randint(1,10)
 
             if self.is_legal_in_space(val,i,j):
                 self.spaces[i][j] = val
+                self.clues.append((i,j))
                 clues_added += 1
-
-def main():
-    board = Board()
-    # print(Board().get_grid(8,8))
-
-if __name__ == "__main__":
-    main()
