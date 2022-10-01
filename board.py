@@ -1,7 +1,9 @@
+import copy
 import random
 from pprint import PrettyPrinter
-
 pp = PrettyPrinter(indent=4)
+
+# ==============================
 
 class Board:
     '''
@@ -12,7 +14,7 @@ class Board:
 
     # ---------------
 
-    def __init__(self, board:'list[list[int]]|None' = None):
+    def __init__(self, board:'list[list[int]]|None' = None, __print:'bool' = False):
         ''' Allows for a `board` to be passed in. If not, it defaults to generating clues. '''
 
         if board is None:
@@ -27,22 +29,32 @@ class Board:
                     if entry != 0:
                         self.clues.append((i,j))
 
+        self.initial_board = copy.deepcopy(self.spaces)
+        
+        self.__print = __print
+
+        self.is_full = False
+
 
     def __getitem__(self, key) -> 'list':
-        return self.spaces[key]
-
+        if type(key) == tuple:
+            return self.spaces[key[0]][key[1]]
+        else:
+            return self.spaces[key]
     
-    def __setitem(self,key,value) -> None:
-        self.spaces[key] = value
+
+    def __setitem__(self,key,value) -> None:
+        if type(key) == tuple:
+            self.spaces[key[0]][key[1]] = value
+        else:
+            self.spaces[key] = value
 
 
     def __len__(self):
         return len(self.spaces)
 
-
-    def __str__(self) -> 'str':
+    def __get_strings(self):
         ''' Formats the board into 9 grids. '''
-
         strings = ["\n"] # \n to give the top of the board a bit of breathing room
 
         for row_index, row in enumerate(self.spaces):
@@ -59,12 +71,12 @@ class Board:
             if row_index in [2,5]:
                 divider = "-" * len(row_string)
                 strings.append(divider)
-            # else:
-            #     # strings.append("\n\n")
-        
-        # del strings[-1]
 
-        return "\n".join(strings)
+        return strings
+
+
+    def __str__(self) -> 'str':
+        return "\n".join(self.__get_strings())
 
     # ---------------
 
@@ -79,7 +91,7 @@ class Board:
 
     def get_grid(self, row_index:'int', column_index: 'int') -> 'list':
         
-        row_third    = None
+        row_third = None
         column_third = None
 
         lower = 0
@@ -102,10 +114,14 @@ class Board:
         for r_index, row in enumerate(self.spaces):
             if not r_index in row_third:
                 continue
+
             for c_index, column_value in enumerate(row):
-                if not c_index in column_third:
-                    continue
-                grid_values.append(column_value)
+
+                cond1 = (not c_index in column_third)
+                cond2 = ((row_index, column_index) == (r_index, c_index))
+
+                if not (cond1 or cond2):
+                    grid_values.append(column_value)
         
         return grid_values
 
@@ -121,13 +137,11 @@ class Board:
 
             for prev_j in reversed(range(9)): # because we still need to see every value in each of the previous rows
 
-                space_value = self.board[i][j]
-
                 # skip past every further-on coordinate on the same row as (i,j)
                 if prev_i == i and prev_j >= j:
                     continue
 
-                if (prev_i, prev_j) in self.board.clues:
+                if (prev_i, prev_j) in self.clues:
                     continue
 
                 # print(prev_i, prev_j)
@@ -137,7 +151,10 @@ class Board:
 
     def is_empty(self, row_index:'int', column_index:'int') -> 'bool':
         ''' Indicates whether the space at `self.spaces[i][j]` has been allocated a value yet. '''
-        return self.spaces[row_index][column_index] == 0
+        if self.is_full:
+            return True
+        else:
+            return self.spaces[row_index][column_index] == 0
 
 
     def is_legal_in_space(self, value:'int', row_index:'int', column_index:'int') -> 'bool':
@@ -172,11 +189,10 @@ class Board:
 
         for row_index, row in enumerate(self.spaces):
             for column_index, value in enumerate(row):
-                
-                if (value == 0) or (not self.is_legal_in_space(value, row_index, column_index)):
+                space = (row_index, column_index)
+                if (value == 0) or (not self.is_legal_in_space(value, *space)):
                     return False
-        else:
-            return True
+        return True
 
     # ---------------
 
@@ -195,3 +211,23 @@ class Board:
                 self.spaces[i][j] = val
                 self.clues.append((i,j))
                 clues_added += 1
+    
+    # ---------------
+
+    def conclude(self):
+        if self.is_complete():
+            
+            print("\nBoard solved")
+
+            print()
+            for index, (row1, row2) in enumerate(zip(self.initial_board, self.spaces)):
+                if index != 4:
+                    print(f"{row1}      {row2}")
+                else:
+                    print(f"{row1} ---> {row2}")
+            print()
+
+        else:
+            print("Board not complete")
+
+# ==============================
