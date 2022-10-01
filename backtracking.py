@@ -1,6 +1,8 @@
 import sys
+import time
 from pprint import PrettyPrinter
 pp = PrettyPrinter(indent=4)
+
 
 from board import Board
 
@@ -16,7 +18,7 @@ class Backtracking:
 
         `self.options` (will) consist of a `dict` where each key is a `tuple` representing a space, and the value is a `list` of `int`s encoding the values that the space can take at a given point in time.
         '''
-        self.board = Board(board if board else Backtracking.board1, __print)
+        self.board = Board(board, __print)
         self.options = {}
 
         # Used after the board is complete. Can tell functions to print to show if
@@ -140,9 +142,17 @@ class Backtracking:
 # ==============================
 
 def main():
-    solver = Backtracking()
+    solver = Backtracking(
+        board = Backtracking.board1
+    )
+
+    start = time.time()
     solver.solve()
-    solver.board.conclude()
+    finish = time.time()
+
+    # solver.board.conclude()
+    solver.board.write_to_file("Backtracking", finish-start)
+    # print(Backtracking.__name__)
 
 # ==============================
 

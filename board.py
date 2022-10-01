@@ -1,5 +1,6 @@
 import copy
 import random
+import json
 from pprint import PrettyPrinter
 pp = PrettyPrinter(indent=4)
 
@@ -17,6 +18,8 @@ class Board:
     def __init__(self, board:'list[list[int]]|None' = None, __print:'bool' = False):
         ''' Allows for a `board` to be passed in. If not, it defaults to generating clues. '''
 
+        self.is_full = False
+
         if board is None:
             self.spaces = [[0 for _ in range(9)] for _ in range(9)]
             self.clues = []
@@ -30,10 +33,7 @@ class Board:
                         self.clues.append((i,j))
 
         self.initial_board = copy.deepcopy(self.spaces)
-        
         self.__print = __print
-
-        self.is_full = False
 
 
     def __getitem__(self, key) -> 'list':
@@ -214,9 +214,9 @@ class Board:
     
     # ---------------
 
-    def conclude(self):
+    def conclude(self, time_taken:'float' = None, write_to_file:'bool' = True):
         if self.is_complete():
-            
+
             print("\nBoard solved")
 
             print()
@@ -227,7 +227,96 @@ class Board:
                     print(f"{row1} ---> {row2}")
             print()
 
+            if write_to_file:
+                self.write_to_file(time_taken)
+
         else:
             print("Board not complete")
+
+    # ---------------
+
+    def write_to_file(self, algo_name:'str', time_taken:'float' = None):
+        ''' Writes to `boards.json` file which contains data on boards solved '''
+
+        if not self.is_complete():
+            return
+
+        print(self.spaces)
+
+
+        boards = None
+
+        # Get contents of boards.json.
+        try:
+            with open("boards.json", "r") as infile:
+                boards = json.load(infile)
+        except:
+            boards = {}
+        
+
+        # Flag -- indicates whether the current initial_board is in the file
+        initial_board_in_file = False
+
+        for k,v in boards.items():
+
+            # Checking if this board has already been solved.
+            #   If yes, we see if we can update the data in the file.
+            #   If no, we add it to the file.
+            if v["initial_board"] == self.initial_board:
+                initial_board_in_file = True
+
+                # Flag -- indicates if the current solution is already in v["board_solutions"]
+                already_in_solutions = False
+                
+                for index, entry in enumerate(v["board_solutions"]):
+                    
+                    if (self.spaces == entry["solution"]):
+                        already_in_solutions = True
+
+                        # Now compare the stored time_taken vs the param
+
+                        # If the `time_taken` param is actually a number
+                        if (not (time_taken is None)):
+
+                            # Conditions under which to overwrite the existing value
+                            # cond1 = (entry["time_taken"] is None)
+                            # cond2 = (time_taken < entry["time_taken"])
+
+                            if (entry["time_taken"] is None) or (time_taken < entry["time_taken"]):
+                                # Overwrite the existing value
+                                boards[k]["board_solutions"][index]["time_taken"] = time_taken
+                        
+                        break
+                    
+                    else: # i.e. We haven't found the current solution's object yet
+                        continue
+                
+                # If the current solved board isn't in the board solutions, add it
+                if (not (already_in_solutions)):
+                    v["board_solutions"].append({
+                        "solution": self.spaces,
+                        "algorithm": algo_name,
+                        "time_taken": time_taken
+                    })
+        
+        if not initial_board_in_file:
+            key = str(len(boards.keys()) + 1)
+            boards[key] = {
+                'initial_board': self.initial_board,
+                'board_solutions': [
+                    {
+                        'algorithm': 'Backtracking',
+                        'solution': self.spaces,
+                        'time_taken': time_taken
+                    }
+                ]
+            }
+
+        print()
+        pp.pprint(boards)
+        print()
+        
+        with open("boards.json", "w") as outfile:
+            json.dump(boards,outfile)
 
 # ==============================
