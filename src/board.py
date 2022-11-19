@@ -37,7 +37,7 @@ class Board:
 
 
     def __getitem__(self, key) -> 'list':
-        if type(key) == tuple:
+        if type(key) == tuple and len(key) == 2:
             return self.spaces[key[0]][key[1]]
         else:
             return self.spaces[key]
