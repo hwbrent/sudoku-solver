@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 805860850023849517}
   - component: {fileID: 6081314321614199228}
+  - component: {fileID: 3737706528675247129}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807623148318887177}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.004103463, y: 0.0088195335, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -82,3 +83,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3737706528675247129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807623148318887177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 487923c0fc1fd4b85ab7651d2a29edb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cell: {fileID: 5831561829699592887, guid: aa6731896ad8c43ababb45069707cca1, type: 3}
+  cells: []
