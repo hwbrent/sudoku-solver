@@ -4,7 +4,6 @@ export default class Solver {
     constructor() {
         this.grid = new Grid();
 
-        this.grid.addToDOM();
-        this.grid.initCells();
+        this.grid.init();
     }
 }

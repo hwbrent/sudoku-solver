@@ -7,6 +7,11 @@ export default class Grid {
 
         document.grid = this;
     }
+    
+    init() {
+        this.addToDOM();
+        this.initCells();
+    }
 
     addToDOM() {
         const root = document.getElementById('root');
