@@ -6,6 +6,7 @@ export default class Cell {
         this.row = row;
         this.col = col;
         this.grid = grid;
+        this._value = null;
     }
 
     addToDOM() {
@@ -19,5 +20,14 @@ export default class Cell {
         this.element.appendChild(this.span);
 
         this.grid.element.appendChild(this.element);
+    }
+
+    get value() {
+        return this._value;
+    }
+    set value(newValue) {
+        this._value = newValue;
+
+        this.span.innerText = this._value;
     }
 }
