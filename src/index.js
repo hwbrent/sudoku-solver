@@ -1,4 +1,4 @@
-import { Solver } from './Solver/Solver.js';
+import Solver from './Solver/Solver.js';
 
 function start(event) {
     event.target.remove();
