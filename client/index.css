@@ -1,0 +1,13 @@
+#grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 10px;
+}
+
+.cell {
+    border-color: black;
+    background-color: red;
+    height: 20px;
+    width: 20px;
+}
