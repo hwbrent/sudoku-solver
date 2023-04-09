@@ -4,6 +4,8 @@ export default class Grid {
     constructor() {
         this.cells = [];
         this.element = null;
+
+        document.grid = this;
     }
 
     addToDOM() {
@@ -15,11 +17,13 @@ export default class Grid {
         root.appendChild(this.element);
     }
 
-    // initCells() {
-    //     for (let i = 0; i < 9; i++) {
-    //         for (let j = 0; j < 9; j++) {
-    //             const cell = new Cell(i, j);
-    //         }
-    //     }
-    // }
+    initCells() {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const cell = new Cell(i, j, this);
+                this.cells.push(cell);
+                cell.addToDOM();
+            }
+        }
+    }
 }
