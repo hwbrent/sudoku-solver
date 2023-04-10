@@ -11,6 +11,7 @@ export default class Grid {
     init() {
         this.addToDOM();
         this.initCells();
+        this.generateClues();
     }
 
     /**
@@ -85,5 +86,35 @@ export default class Grid {
         }
 
         return cells;
+    }
+
+    generateClues() {
+        let cluesPlaced = 0;
+
+        while (cluesPlaced < 17) {
+            const minI = 0;
+            const maxI = 81;
+            const randomIndex = Math.floor(Math.random() * (maxI - minI) + minI);
+
+            const cell = this.cells[randomIndex];
+            console.debug(randomIndex, cell);
+
+            if (cell.value) {
+                continue;
+            }
+
+            const minV = 1;
+            const maxV = 10;
+            const randomValue = Math.floor(Math.random() * (maxV - minV) + minV);
+
+            cell.value = randomValue;
+            if (!cell.valueIsValid()) {
+                cell.value = null;
+            } else {
+                cell.isClue = true;
+                cell.greyOut();
+                cluesPlaced++;
+            }
+        }
     }
 }

@@ -57,4 +57,8 @@ export default class Cell {
             !thisBox.includes(this.value)
         )
     }
+
+    greyOut() {
+        this.element.style.setProperty('background-color', '#bfbfbf');
+    }
 }
