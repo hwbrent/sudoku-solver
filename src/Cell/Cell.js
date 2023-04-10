@@ -16,7 +16,6 @@ export default class Cell {
         // this.element.dataset['col'] = col;
 
         this.span = document.createElement('span');
-        this.span.classList.add('cell-value');
         this.element.appendChild(this.span);
 
         this.grid.element.appendChild(this.element);
