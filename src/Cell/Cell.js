@@ -43,7 +43,7 @@ export default class Cell {
 
         let thisRow = this.grid.getRow(this.row);
         let thisColumn = this.grid.getColumn(this.col);
-        let thisBox = this.grid.getColumn(this.row, this.col);
+        let thisBox = this.grid.getBox(this.row, this.col);
 
         removeThis(thisRow);
         removeThis(thisColumn);
