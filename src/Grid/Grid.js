@@ -73,18 +73,21 @@ export default class Grid {
      * @param {number} column_index - the column index of the cell.
      * @returns {Array<Cell>}
      */
-    getBox(row_index, column_index) {
-        const cells = [];
-
+    getBox(row_index, col_index) {
         const rowLower = Math.floor(row_index / 3) * 3;
-        const colLower = Math.floor(column_index / 3) * 3;
+        const colLower = Math.floor(col_index / 3) * 3;
 
+        const cells = [];
         for (let i = rowLower; i < rowLower+3; i++) {
             for (let j = colLower; j < colLower+3; j++) {
-                console.debug(i,j);
-                cells.push(this.cells[(i*9) + j]);
+                const index = (i * 9) + j;
+                const cell = this.cells[index];
+                cells.push(cell);
             }
         }
+
+        // this.cells.forEach(cell => cell.element.style.backgroundColor = 'white');
+        // cells.forEach(cell => cell.element.style.backgroundColor = 'black');
 
         return cells;
     }
