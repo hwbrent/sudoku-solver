@@ -5,8 +5,6 @@ export default class Grid {
         /** @type {Array<Cell>} */
         this.cells = [];
         this.element = null;
-
-        document.grid = this;
     }
 
     init() {
@@ -35,7 +33,7 @@ export default class Grid {
     initCells() {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
-                const cell = new Cell(i, j, this);
+                const cell = new Cell(i, j);
                 this.cells.push(cell);
                 cell.addToDOM();
             }

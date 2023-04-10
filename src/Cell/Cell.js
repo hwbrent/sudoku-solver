@@ -1,15 +1,12 @@
 import Grid from '../Grid/Grid.js';
 
 export default class Cell {
-    constructor(row, col, grid) {
+    constructor(row, col) {
         this.element = null;
         this.span = null;
 
         this.row = row;
         this.col = col;
-
-        /** @type {Grid} */
-        this.grid = grid;
 
         this._value = null;
     }
@@ -23,7 +20,7 @@ export default class Cell {
         this.span = document.createElement('span');
         this.element.appendChild(this.span);
 
-        this.grid.element.appendChild(this.element);
+        window.grid.element.appendChild(this.element);
     }
 
     get value() {
@@ -41,9 +38,9 @@ export default class Cell {
         const removeThis = (arr) => arr.splice(arr.indexOf(this), 1);
         const mapValues = (arr) => arr.map((cell) => cell.value);
 
-        let thisRow = this.grid.getRow(this.row);
-        let thisColumn = this.grid.getColumn(this.col);
-        let thisBox = this.grid.getBox(this.row, this.col);
+        let thisRow = window.grid.getRow(this.row);
+        let thisColumn = window.grid.getColumn(this.col);
+        let thisBox = window.grid.getBox(this.row, this.col);
 
         removeThis(thisRow);
         removeThis(thisColumn);
