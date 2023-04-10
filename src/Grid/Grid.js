@@ -13,6 +13,10 @@ export default class Grid {
         this.initCells();
     }
 
+    /**
+     * @summary Creates element for grid and adds it to DOM.
+     * @returns {void} void
+     */
     addToDOM() {
         const root = document.getElementById('root');
 
@@ -22,6 +26,10 @@ export default class Grid {
         root.appendChild(this.element);
     }
 
+    /**
+     * @summary Initialises all 81 cells of the sudoku grid.
+     * @returns {void} void
+     */
     initCells() {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
@@ -32,12 +40,22 @@ export default class Grid {
         }
     }
 
+    /**
+     * @summary Gets the row with index {@link row_index}.
+     * @param {number} row_index - the index of the target row.
+     * @returns {Array<Cell>}
+     */
     getRow(row_index) {
         const startIndex = row_index * 9;
         const endIndex = startIndex + 9;
         return this.cells.slice(startIndex, endIndex);
     }
 
+    /**
+     * @summary Gets the column with index {@link column}.
+     * @param {number} column_index - the index of the target column.
+     * @returns {Array<Cell>}
+     */
     getColumn(column_index) {
         const cells = [];
         for (let i = column_index; i < 81; i += 9) {
@@ -46,6 +64,13 @@ export default class Grid {
         return cells;
     }
 
+    /**
+     * @summary Gets the box (i.e. 3x3 sub-grid) containing the {@link Cell}
+     *          at {@link row_index} and {@link column_index}.
+     * @param {number} row_index - the row index of the cell.
+     * @param {number} column_index - the column index of the cell.
+     * @returns {Array<Cell>}
+     */
     getBox(row_index, column_index) {
         const cells = [];
 
