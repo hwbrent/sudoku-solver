@@ -35,7 +35,9 @@ export default class Cell {
         this.span.innerText = this._value;
     }
 
-    valueIsValid() {
+    valueIsValid(val) {
+        const value = val ?? this.value;
+
         const removeThis = (arr) => arr.splice(arr.indexOf(this), 1);
         const mapValues = (arr) => arr.map((cell) => cell.value);
 
@@ -52,13 +54,15 @@ export default class Cell {
         thisBox = mapValues(thisBox);
 
         return (
-            !thisRow.includes(this.value) &&
-            !thisColumn.includes(this.value) &&
-            !thisBox.includes(this.value)
+            !thisRow.includes(value) &&
+            !thisColumn.includes(value) &&
+            !thisBox.includes(value)
         )
     }
 
-    greyOut() {
+    setClue(value) {
+        this.isClue = true;
+        this.value = value;
         this.element.style.setProperty('background-color', '#bfbfbf');
     }
 }

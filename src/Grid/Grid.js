@@ -2,6 +2,7 @@ import Cell from '../Cell/Cell.js';
 
 export default class Grid {
     constructor() {
+        /** @type {Array<Cell>} */
         this.cells = [];
         this.element = null;
 
@@ -97,7 +98,6 @@ export default class Grid {
             const randomIndex = Math.floor(Math.random() * (maxI - minI) + minI);
 
             const cell = this.cells[randomIndex];
-            console.debug(randomIndex, cell);
 
             if (cell.value) {
                 continue;
@@ -107,12 +107,8 @@ export default class Grid {
             const maxV = 10;
             const randomValue = Math.floor(Math.random() * (maxV - minV) + minV);
 
-            cell.value = randomValue;
-            if (!cell.valueIsValid()) {
-                cell.value = null;
-            } else {
-                cell.isClue = true;
-                cell.greyOut();
+            if (cell.valueIsValid(randomValue)) {
+                cell.setClue(randomValue);
                 cluesPlaced++;
             }
         }
